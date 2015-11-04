@@ -26,6 +26,7 @@ import com.visa.inappsdk.datamodel.transaction.SDKTransactionObject;
 import com.visa.inappsdk.datamodel.transaction.SDKTransactionType;
 import com.visa.inappsdk.datamodel.transaction.callbacks.SDKApiConnectionCallback;
 import com.visa.inappsdk.datamodel.transaction.fields.SDKCardData;
+import com.visa.inappsdk.datamodel.transaction.fields.SDKCardType;
 import com.visa.webcheckout.R;
 import com.visa.webcheckout.services.MessageSignatureService;
 import com.visa.webcheckout.signature.MessageSignature;
@@ -85,7 +86,7 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
         // 2) InAppSDKApiClient.Environment - CYBS ENVIRONMENT
         // 3) API_LOGIN_ID String - merchant's API LOGIN ID
         apiClient = new InAppSDKApiClient.Builder
-                (getActivity(), InAppSDKApiClient.Environment.ENV_TEST, API_LOGIN_ID_NEW)
+                (getActivity(), InAppSDKApiClient.Environment.ENV_TEST, API_LOGIN_ID)
                 .setSDKConnectionCallback(this) // receive callbacks for connection results
                 .setTransactionNamespace(TRANSACT_NAMESPACE) // optional - ApiClient has a default namespace too
                 .build();
@@ -143,6 +144,8 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
                     transactionObject, generateSignature(transactionObject));
         } catch (NullPointerException e) {
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+            if(progressDialog.isShowing())
+                progressDialog.dismiss();
         }
     }
 
@@ -316,8 +319,8 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
         SDKCardData cardData = null;
         try {
             cardData = new SDKCardData.Builder(CARD_NUMBER, CARD_EXPIRATION_MONTH,
-                    CARD_EXPIRATION_YEAR, CARD_CVV)
-                    .setCardZipCode(CARD_ZIP) // optional
+                    CARD_EXPIRATION_YEAR)
+                    .setCardCVV(CARD_CVV) // optional
                     .build();
         } catch (SDKInvalidCardException e) {
             // Handle exception if the card is invalid
@@ -330,8 +333,9 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
     private SDKCardData prepareCardData() {
         SDKCardData cardData = null;
         try {
-            cardData = new SDKCardData.Builder(cardNumber, month,
-                    year, cvv)
+            cardData = new SDKCardData.Builder(cardNumber, month, year)
+                    .setCardCVV(cvv) // optional
+                    .setCardType(SDKCardType.PAN) //optional - if token, this must be set to SDKCardType.TOKEN
                     .build();
         } catch (SDKInvalidCardException e) {
             // Handle exception if the card is invalid
@@ -358,7 +362,7 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
      */
     private String generateSignature(SDKTransactionObject transactionObject) {
         return MessageSignature.getInstance().generateSignature
-                (transactionObject, API_LOGIN_ID_NEW);
+                (transactionObject, API_LOGIN_ID);
     }
 
     @Override
