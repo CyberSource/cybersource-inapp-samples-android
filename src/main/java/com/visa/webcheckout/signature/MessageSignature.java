@@ -49,7 +49,7 @@ public class MessageSignature {
         String stringHmacSha1 = null;
         try {
             // 2) Step 2 - Take HMAC-SHA1 of the transaction-key
-            stringHmacSha1 = getHmacSha1(transactionSecretKey);
+            stringHmacSha1 = getHmacSha1(transactionSecretKeyNew);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
