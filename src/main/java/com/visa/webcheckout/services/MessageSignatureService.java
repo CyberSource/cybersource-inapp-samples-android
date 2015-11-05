@@ -127,11 +127,6 @@ public class MessageSignatureService extends IntentService {
                     // for discounted successful transaction as: 120
 
                     SDKGatewayResponse response = null;
-                    if(result.type == SDKGatewayResponseType.SDK_NVP_TRANSACTION)
-                        response = result.convertNVPToGatewayResponse(result);
-                    else
-                        response = result.convertToGatewayResponse();
-
                     resultObject = response;
 
                 } else {
@@ -166,7 +161,6 @@ public class MessageSignatureService extends IntentService {
             SDKGatewayResponse response = (SDKGatewayResponse)result;
             resultData.putParcelable(SERVICE_RESULT_RESPONSE_KEY, response);
             switch (response.getType()) {
-                case SDK_ANDROID_PAY_TRANSACTION:
                 case SDK_ENCRYPTION:
                     resultReceiver.send(SERVICE_RESULT_CODE_SDK_RESPONSE, resultData);
                     break;

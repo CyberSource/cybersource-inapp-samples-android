@@ -86,7 +86,7 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
         // 2) InAppSDKApiClient.Environment - CYBS ENVIRONMENT
         // 3) API_LOGIN_ID String - merchant's API LOGIN ID
         apiClient = new InAppSDKApiClient.Builder
-                (getActivity(), InAppSDKApiClient.Environment.ENV_TEST, API_LOGIN_ID_NEW)
+                (getActivity(), InAppSDKApiClient.Environment.ENV_TEST, API_LOGIN_ID)
                 .setSDKConnectionCallback(this) // receive callbacks for connection results
                 .setTransactionNamespace(TRANSACT_NAMESPACE) // optional - ApiClient has a default namespace too
                 .build();
@@ -362,7 +362,7 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
      */
     private String generateSignature(SDKTransactionObject transactionObject) {
         return MessageSignature.getInstance().generateSignature
-                (transactionObject, API_LOGIN_ID_NEW);
+                (transactionObject, API_LOGIN_ID);
     }
 
     @Override
