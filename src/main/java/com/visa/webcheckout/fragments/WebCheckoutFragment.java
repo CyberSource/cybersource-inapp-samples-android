@@ -25,8 +25,9 @@ import com.visa.inappsdk.datamodel.response.SDKGatewayResponse;
 import com.visa.inappsdk.datamodel.transaction.SDKTransactionObject;
 import com.visa.inappsdk.datamodel.transaction.SDKTransactionType;
 import com.visa.inappsdk.datamodel.transaction.callbacks.SDKApiConnectionCallback;
+import com.visa.inappsdk.datamodel.transaction.fields.SDKBillTo;
+import com.visa.inappsdk.datamodel.transaction.fields.SDKCardAccountNumberType;
 import com.visa.inappsdk.datamodel.transaction.fields.SDKCardData;
-import com.visa.inappsdk.datamodel.transaction.fields.SDKCardType;
 import com.visa.webcheckout.R;
 import com.visa.webcheckout.services.MessageSignatureService;
 import com.visa.webcheckout.signature.MessageSignature;
@@ -37,20 +38,22 @@ import com.visa.webcheckout.signature.MessageSignature;
 public class WebCheckoutFragment extends Fragment implements View.OnClickListener, SDKApiConnectionCallback {
 
     public static final String TAG = "WebCheckoutFragment";
-    private final String CARD_NUMBER = "4111111111111111";
-    private final String CARD_EXPIRATION_MONTH = "11";
-    private final String CARD_EXPIRATION_YEAR = "2017";
-    private final String CARD_ZIP = "98001";
-    private final String CARD_CVV = "256";
+    private final String ACCOUNT_NUMBER = "4111111111111111";
+    private final String EXPIRATION_MONTH = "11";
+    private final String EXPIRATION_YEAR = "2017";
+    private final String CVV = "256";
+    private final String POSTAL_CODE = "98001";
     public static String API_LOGIN_ID = "test_paymentech_001"; // replace with YOUR_API_LOGIN_ID
-    public static String API_LOGIN_ID_NEW = "mpos_paymentech"; // replace with YOUR_API_LOGIN_ID
     private static String TRANSACT_NAMESPACE = "urn:schemas-cybersource-com:transaction-data-1.120";
+
+    /** SOAP Payments TEST endpoint address. */
+    public static String PAYMENTS_TEST_URL = "https://mobiletest.ic3.com/mpos/transactionProcessor/";
+    /** SOAP Payments PROD endpoint address. */
+    public static String PAYMENTS_PROD_URL = "https://mobile.ic3.com/mpos/transactionProcessor/";
 
     private final int MIN_CARD_NUMBER_LENGTH = 13;
     private final int MIN_YEAR_LENGTH = 2;
     private final int MIN_CVV_LENGTH = 3;
-    private final int MIN_ZIP_CODE_LENGTH = 5;
-    private final int MAX_ZIP_CODE_LENGTH = 10;
     private final String YEAR_PREFIX = "20";
 
     private Button checkoutButton;
@@ -87,8 +90,11 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
         // 3) API_LOGIN_ID String - merchant's API LOGIN ID
         apiClient = new InAppSDKApiClient.Builder
                 (getActivity(), InAppSDKApiClient.Environment.ENV_TEST, API_LOGIN_ID)
-                .setSDKConnectionCallback(this) // receive callbacks for connection results
-                .setTransactionNamespace(TRANSACT_NAMESPACE) // optional - ApiClient has a default namespace too
+                .sdkConnectionCallback(this) // receive callbacks for connection results
+                .sdkApiProdEndpoint(PAYMENTS_PROD_URL) // option to configure PROD Endpoint
+                .sdkApiTestEndpoint(PAYMENTS_TEST_URL) // option to configure TEST Endpoint
+                .sdkConnectionTimeout(5000) // optional connection time out in milliseconds
+                .transactionNamespace(TRANSACT_NAMESPACE) // optional - ApiClient has a default namespace too
                 .build();
     }
 
@@ -97,7 +103,6 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //initializeProgressDialog();
         View view = inflater.inflate(R.layout.fragment_web_checkout, container, false);
 
         cardNumberView = (EditText) view.findViewById(R.id.card_number_view);
@@ -309,18 +314,13 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
         });
     }*/
 
-    private void showSnackBar(){
-/*        Snackbar.make(R.layout.fragment_web_checkout, "Checkout clicked", Snackbar.LENGTH_LONG)
-                .setAction("undo", null)
-                .show();*/
-    }
-
     private SDKCardData prepareTestCardData() {
         SDKCardData cardData = null;
         try {
-            cardData = new SDKCardData.Builder(CARD_NUMBER, CARD_EXPIRATION_MONTH,
-                    CARD_EXPIRATION_YEAR)
-                    .setCardCVV(CARD_CVV) // optional
+            cardData = new SDKCardData.Builder(ACCOUNT_NUMBER, EXPIRATION_MONTH,
+                    EXPIRATION_YEAR)
+                    .cvNumber(CVV) // optional
+                    .type(SDKCardAccountNumberType.PAN) //optional - if token then not optional and must be set to SDKCardType.TOKEN
                     .build();
         } catch (SDKInvalidCardException e) {
             // Handle exception if the card is invalid
@@ -330,12 +330,12 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
         return cardData;
     }
 
-    private SDKCardData prepareCardData() {
+    private SDKCardData prepareCardDataFromFields() {
         SDKCardData cardData = null;
         try {
             cardData = new SDKCardData.Builder(cardNumber, month, year)
-                    .setCardCVV(cvv) // optional
-                    .setCardType(SDKCardType.PAN) //optional - if token, this must be set to SDKCardType.TOKEN
+                    .cvNumber(cvv) // optional
+                    .type(SDKCardAccountNumberType.PAN) //optional - if token, this must be set to SDKCardType.TOKEN
                     .build();
         } catch (SDKInvalidCardException e) {
             // Handle exception if the card is invalid
@@ -343,6 +343,15 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
             e.printStackTrace();
         }
         return cardData;
+    }
+
+    private SDKBillTo prepareBillingInformation(){
+        SDKBillTo billTo = new SDKBillTo.Builder()
+                .firstName("First Name")
+                .lastName("Last Name")
+                .postalCode("98052")
+                .build();
+        return billTo;
     }
 
     /**
@@ -352,8 +361,9 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
         // create a transaction object by calling the predefined api for creation
         return SDKTransactionObject.
                 createTransactionObject(SDKTransactionType.SDK_TRANSACTION_ENCRYPTION) // type of transaction object
-                .setMerchantReferenceCode("Android_Sample_Code" + "_" + Long.toString(System.currentTimeMillis())) // caqn be set to anything meaningful
-                .setCardData(prepareCardData()) // card data to be encrypted
+                .merchantReferenceCode("Android_Sample_Code" + "_" + Long.toString(System.currentTimeMillis())) // caqn be set to anything meaningful
+                .cardData(prepareCardDataFromFields()) // card data to be encrypted
+                .billTo(prepareBillingInformation()) // billing information
                 .build();
     }
 

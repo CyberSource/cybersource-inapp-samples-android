@@ -27,7 +27,6 @@ public class MessageSignature {
     // This part of the code that generates the Message-Signature is present here only to make the sample app work.
     // Message-Signature generation should be done on the server.
     String transactionSecretKey = "r1bngjB1sJIz6HrmFdBubAh46xMVHWwsjw66AzlHksJW3TrAnXNiuoWOjA21zv/7ipfk9L7dPXbQat09UiYcD6l8534vVMKzlL0+os2kFHA1nwgOIct8f6PLJqGw+FnXvYPDllNrFgvtXELoP8JzTDP4HwmWA7XRp4tC0Bsq3pKP1w1iXj2CTXV3T+FtL4nXC3XxkDEVQN8jTTBGniQOGfMlFoVkzkhjOPwMy94fUVS0/PwSZit12gqPJ7/xE07oC5+EV+XGEjXZuEaKtSNJECN51qkcKHpikdaXKJT42oXOFLGLgh/SbcJtgjVWRarbf/P9E27lzuIS8pNX9HKJdQ==";
-    String transactionSecretKeyNew = "XuPPGtXb8eq7Gi0SB57QfYRG9UO672uzI+i6goHaHte1tUxAbpn6pNExgNMKo6Nis8f3JjzqH70EQCEuSwMkTjqOkNkSiDJJhYJjye1MbHYTJm0HGjj2EZqrM0RqFSdwQ1w8/sMMqo4deFVxlwp/vG74ky89U0N3dl2r4ljcliliJ6PGVFgUveBZ6sqHdWXGOUJSS57ugNzwcSlL9A87uC/FXdK7B0ZE89MXEp3VR5g87rci1O1VaiNazlOdltFY0g27FOM40SAqf8gOTtEFVnuz510wMhOyaKBi0S211N8KN0cDPOMe7dmrW1tP+F5zZuQuoMZqJ4a+jSLJKUmWug==";
     private static MessageSignature instance = null;
 
     public static final MessageSignature getInstance() {
@@ -48,7 +47,7 @@ public class MessageSignature {
     public String generateSignature(SDKTransactionObject transactionObject, String loginId){
         String stringHmacSha1 = null;
         try {
-            // 2) Step 2 - Take HMAC-SHA1 of the transaction-key
+            // Take HMAC-SHA1 of the transaction-key
             stringHmacSha1 = getHmacSha1(transactionSecretKey);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -56,20 +55,20 @@ public class MessageSignature {
             e.printStackTrace();
         }
 
-        // 5) Step 5 - Get the amount of the transaction (amount only needed for ICS_AUTH service but not for ICS_ENCRYPT_SERVICE)
+        // Get the amount of the transaction (amount only needed for ICS_AUTH service but not for ICS_ENCRYPT_SERVICE)
         String amount = getGatewayAmountString(BigDecimal.ZERO);
 
-        // 6) Step 6 - Get the current timeStamp in UTC format.
+        // Get the current timeStamp in UTC format.
         String timeStamp = getCurrentTimestampUTC();
 
-        // 7) Concatenate all together into a single string:
+        // Concatenate all together into a single string:
         String signatureComponents = stringHmacSha1
                 + loginId                                   // 3) Step 3 - Get your API_LOGIN_ID
                 + transactionObject.getMerchantReferenceCode()    // 4) Get the merchantReferenceCode
                 /*+ amount*/ + timeStamp;
         String hashedSignatureComponents = null;
         try {
-            // 8) Step 8 - Take HMAC-SHA256 of the signatureComponents
+            // Take HMAC-SHA256 of the signatureComponents
             hashedSignatureComponents = getHmacSHA256(signatureComponents);
         } catch (InvalidKeyException e) {
             e.printStackTrace();
@@ -79,52 +78,7 @@ public class MessageSignature {
             e.printStackTrace();
         }
 
-        // 9) Finally create the final signature:
-        String finalSignature = hashedSignatureComponents + SEPARATOR + timeStamp;
-        return finalSignature;
-    }
-
-    /**
-     * Covers all the steps to create a Message-Signature
-     *
-     * @param amount
-     * @param loginId
-     * @return
-     *
-     */
-    public String generateSignatureForNVPTransaction(String amount, String loginId, String merchantReferenceCode){
-        String stringHmacSha1 = null;
-        try {
-            // 2) Step 2 - Take HMAC-SHA1 of the transaction-key
-            stringHmacSha1 = getHmacSha1(transactionSecretKey);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        // 5) Step 5 - Get the amount of the transaction
-        // 6) Step 6 - Get the current timeStamp in UTC format.
-        String timeStamp = getCurrentTimestampUTC();
-
-        // 7) Concatenate all together into a single string:
-        String signatureComponents = stringHmacSha1
-                + loginId                                   // 3) Step 3 - Get your API_LOGIN_ID
-                + merchantReferenceCode                 // 4) Get the merchantReferenceCode
-                + amount + timeStamp;
-        String hashedSignatureComponents = null;
-        try {
-            // 8) Step 8 - Take HMAC-SHA256 of the signatureComponents
-            hashedSignatureComponents = getHmacSHA256(signatureComponents);
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        // 9) Finally create the final signature:
+        // Finally create the final signature:
         String finalSignature = hashedSignatureComponents + SEPARATOR + timeStamp;
         return finalSignature;
     }
