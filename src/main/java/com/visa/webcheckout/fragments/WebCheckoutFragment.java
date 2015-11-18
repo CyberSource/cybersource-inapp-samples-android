@@ -21,9 +21,9 @@ import com.visa.inappsdk.common.error.SDKError;
 import com.visa.inappsdk.common.exceptions.SDKInvalidCardException;
 import com.visa.inappsdk.connectors.inapp.InAppSDKApiClient;
 import com.visa.inappsdk.connectors.inapp.receivers.TransactionResultReceiver;
+import com.visa.inappsdk.connectors.inapp.transaction.client.InAppTransactionObject;
+import com.visa.inappsdk.connectors.inapp.transaction.client.InAppTransactionType;
 import com.visa.inappsdk.datamodel.response.SDKGatewayResponse;
-import com.visa.inappsdk.datamodel.transaction.SDKTransactionObject;
-import com.visa.inappsdk.datamodel.transaction.SDKTransactionType;
 import com.visa.inappsdk.datamodel.transaction.callbacks.SDKApiConnectionCallback;
 import com.visa.inappsdk.datamodel.transaction.fields.SDKBillTo;
 import com.visa.inappsdk.datamodel.transaction.fields.SDKCardAccountNumberType;
@@ -138,7 +138,7 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
         if(responseLayout.getVisibility() == View.VISIBLE)
             responseLayout.setVisibility(View.GONE);
 
-        SDKTransactionObject transactionObject = prepareTransactionObject();
+        InAppTransactionObject transactionObject = prepareTransactionObject();
         try {
             // make a call to connect to API
             // parameters:
@@ -357,10 +357,10 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
     /**
      * prepares a transaction object with dummy data to be used with the Gateway transactions
      */
-    private SDKTransactionObject prepareTransactionObject() {
+    private InAppTransactionObject prepareTransactionObject() {
         // create a transaction object by calling the predefined api for creation
-        return SDKTransactionObject.
-                createTransactionObject(SDKTransactionType.SDK_TRANSACTION_ENCRYPTION) // type of transaction object
+        return InAppTransactionObject.
+                createTransactionObject(InAppTransactionType.SDK_TRANSACTION_ENCRYPTION) // type of transaction object
                 .merchantReferenceCode("Android_Sample_Code" + "_" + Long.toString(System.currentTimeMillis())) // caqn be set to anything meaningful
                 .cardData(prepareCardDataFromFields()) // card data to be encrypted
                 .billTo(prepareBillingInformation()) // billing information
@@ -370,7 +370,7 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
     /**
      * Generates the signature in the sdk to be used with the next call
      */
-    private String generateSignature(SDKTransactionObject transactionObject) {
+    private String generateSignature(InAppTransactionObject transactionObject) {
         return MessageSignature.getInstance().generateSignature
                 (transactionObject, API_LOGIN_ID);
     }

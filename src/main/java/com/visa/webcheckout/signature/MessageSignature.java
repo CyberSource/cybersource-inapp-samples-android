@@ -1,6 +1,6 @@
 package com.visa.webcheckout.signature;
 
-import com.visa.inappsdk.datamodel.transaction.SDKTransactionObject;
+import com.visa.inappsdk.connectors.inapp.transaction.client.InAppTransactionObject;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -44,7 +44,7 @@ public class MessageSignature {
      * @return
      *
      */
-    public String generateSignature(SDKTransactionObject transactionObject, String loginId){
+    public String generateSignature(InAppTransactionObject transactionObject, String loginId){
         String stringHmacSha1 = null;
         try {
             // Take HMAC-SHA1 of the transaction-key
