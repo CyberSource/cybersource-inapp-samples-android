@@ -14,7 +14,7 @@
 
 <!--    <fragment
         android:id="@+id/full_wallet_confirmation_button_fragment"
-        android:name="com.visa.webcheckout.fragments.WebCheckoutFragment"
+        android:name="com.visa.webcheckout.fragments.encryption.WebCheckoutFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />-->
 

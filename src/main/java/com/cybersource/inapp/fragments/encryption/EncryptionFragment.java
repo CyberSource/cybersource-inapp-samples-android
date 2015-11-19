@@ -1,4 +1,4 @@
-package com.visa.webcheckout.fragments;
+package com.cybersource.inapp.fragments.encryption;
 
 
 import android.app.ProgressDialog;
@@ -28,14 +28,14 @@ import com.visa.inappsdk.datamodel.transaction.callbacks.SDKApiConnectionCallbac
 import com.visa.inappsdk.datamodel.transaction.fields.SDKBillTo;
 import com.visa.inappsdk.datamodel.transaction.fields.SDKCardAccountNumberType;
 import com.visa.inappsdk.datamodel.transaction.fields.SDKCardData;
-import com.visa.webcheckout.R;
-import com.visa.webcheckout.services.MessageSignatureService;
-import com.visa.webcheckout.signature.MessageSignature;
+import com.cybersource.inapp.R;
+import com.cybersource.inapp.services.MessageSignatureService;
+import com.cybersource.inapp.signature.MessageSignature;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WebCheckoutFragment extends Fragment implements View.OnClickListener, SDKApiConnectionCallback {
+public class EncryptionFragment extends Fragment implements View.OnClickListener, SDKApiConnectionCallback {
 
     public static final String TAG = "WebCheckoutFragment";
     private final String ACCOUNT_NUMBER = "4111111111111111";
@@ -76,7 +76,7 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
 
     private TransactionResultReceiver resultReceiver;
 
-    public WebCheckoutFragment() {
+    public EncryptionFragment() {
         // Required empty public constructor
     }
 
@@ -346,9 +346,7 @@ public class WebCheckoutFragment extends Fragment implements View.OnClickListene
     }
 
     private SDKBillTo prepareBillingInformation(){
-        SDKBillTo billTo = new SDKBillTo.Builder()
-                .firstName("First Name")
-                .lastName("Last Name")
+        SDKBillTo billTo = new SDKBillTo.Builder("First Name", "Last Name")
                 .postalCode("98052")
                 .build();
         return billTo;

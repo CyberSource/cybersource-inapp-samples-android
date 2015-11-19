@@ -1,4 +1,4 @@
-package com.visa.webcheckout.services;
+package com.cybersource.inapp.services;
 
 import android.app.IntentService;
 import android.content.Context;
@@ -17,7 +17,6 @@ import com.visa.inappsdk.connectors.inapp.receivers.TransactionResultReceiver;
 import com.visa.inappsdk.connectors.inapp.responses.InAppResponseObject;
 import com.visa.inappsdk.datamodel.SDKGatewayErrorMapping;
 import com.visa.inappsdk.datamodel.response.SDKGatewayResponse;
-import com.visa.inappsdk.datamodel.response.SDKGatewayResponseType;
 import com.visa.inappsdk.soap.connection.SDKConnectionConstants;
 import com.visa.inappsdk.soap.parser.SDKSoapParser;
 

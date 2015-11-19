@@ -1,4 +1,4 @@
-package com.visa.webcheckout.fragments;
+package com.cybersource.inapp.fragments;
 
 
 import android.os.Bundle;

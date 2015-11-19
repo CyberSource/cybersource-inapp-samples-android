@@ -1,4 +1,4 @@
-package com.visa.webcheckout;
+package com.cybersource.inapp;
 
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
@@ -7,11 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.visa.inappsdk.common.error.SDKError;
-import com.visa.inappsdk.datamodel.response.SDKGatewayResponse;
-import com.visa.webcheckout.fragments.WebCheckoutFragment;
-import com.visa.webcheckout.receivers.MessageSignatureResultReceiver;
-import com.visa.webcheckout.services.MessageSignatureService;
+import com.cybersource.inapp.fragments.encryption.EncryptionFragment;
+import com.cybersource.inapp.receivers.MessageSignatureResultReceiver;
 
 
 public class MainActivity extends AppCompatActivity implements MessageSignatureResultReceiver.Receiver {
@@ -59,10 +56,10 @@ public class MainActivity extends AppCompatActivity implements MessageSignatureR
 
     private void pullWebCheckoutFragment(){
         FragmentManager fragmentManager = getSupportFragmentManager();
-        WebCheckoutFragment webCheckoutFragment = (WebCheckoutFragment)
+        EncryptionFragment webCheckoutFragment = (EncryptionFragment)
                 fragmentManager.findFragmentByTag(TAG_FRAGMENT_WEBCHECKOUT);
         if(webCheckoutFragment == null) {
-            webCheckoutFragment = new WebCheckoutFragment();
+            webCheckoutFragment = new EncryptionFragment();
             fragmentManager.beginTransaction()
                     .replace(R.id.web_checkout_fragment_container, webCheckoutFragment, TAG_FRAGMENT_WEBCHECKOUT)
                     .commit();

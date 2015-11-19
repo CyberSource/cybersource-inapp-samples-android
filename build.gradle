@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.0"
 
     defaultConfig {
-        applicationId "com.visa.webcheckout"
+        applicationId "com.cybersource.inapp"
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 1

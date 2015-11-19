@@ -1,4 +1,4 @@
-package com.visa.webcheckout.signature;
+package com.cybersource.inapp.signature;
 
 import com.visa.inappsdk.connectors.inapp.transaction.client.InAppTransactionObject;
 
