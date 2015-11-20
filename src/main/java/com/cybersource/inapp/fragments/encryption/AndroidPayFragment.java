@@ -1,6 +1,5 @@
 package com.cybersource.inapp.fragments.encryption;
 
-
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,11 +32,11 @@ import com.cybersource.inapp.services.MessageSignatureService;
 import com.cybersource.inapp.signature.MessageSignature;
 
 /**
- * Fragment for a test Encryption Transaction
+ * Fragment for a test Android Pay Transaction
  *
  * Created by fzubair on 11/19/2015.
  */
-public class EncryptionFragment extends Fragment implements View.OnClickListener, SDKApiConnectionCallback {
+public class AndroidPayFragment extends Fragment implements View.OnClickListener, SDKApiConnectionCallback {
 
     public static final String TAG = "WebCheckoutFragment";
     private final String ACCOUNT_NUMBER = "4111111111111111";
@@ -78,7 +77,7 @@ public class EncryptionFragment extends Fragment implements View.OnClickListener
 
     private TransactionResultReceiver resultReceiver;
 
-    public EncryptionFragment() {
+    public AndroidPayFragment() {
         // Required empty public constructor
     }
 

@@ -1,6 +1,6 @@
 package com.cybersource.inapp.signature;
 
-import com.visa.inappsdk.connectors.inapp.transaction.client.InAppTransactionObject;
+import com.visa.inappsdk.connectors.inapp.transaction.client.InAppTransaction;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -44,7 +44,7 @@ public class MessageSignature {
      * @return
      *
      */
-    public String generateSignature(InAppTransactionObject transactionObject, String loginId){
+    public String generateSignature(InAppTransaction transactionObject, String loginId){
         String stringHmacSha1 = null;
         try {
             // Take HMAC-SHA1 of the transaction-key
