@@ -10,7 +10,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/web_checkout_fragment_container"/>
+        android:id="@+id/fragment_container"/>
 
 <!--    <fragment
         android:id="@+id/full_wallet_confirmation_button_fragment"

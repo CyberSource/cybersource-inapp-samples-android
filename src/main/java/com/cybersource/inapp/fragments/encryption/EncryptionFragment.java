@@ -39,7 +39,7 @@ import com.cybersource.inapp.signature.MessageSignature;
  */
 public class EncryptionFragment extends Fragment implements View.OnClickListener, SDKApiConnectionCallback {
 
-    public static final String TAG = "WebCheckoutFragment";
+    public static final String TAG = "EncryptionFragment";
     private final String ACCOUNT_NUMBER = "4111111111111111";
     private final String EXPIRATION_MONTH = "11";
     private final String EXPIRATION_YEAR = "2017";
@@ -105,7 +105,7 @@ public class EncryptionFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_web_checkout, container, false);
+        View view = inflater.inflate(R.layout.fragment_encryption, container, false);
 
         cardNumberView = (EditText) view.findViewById(R.id.card_number_view);
         setUpCreditCardEditText();

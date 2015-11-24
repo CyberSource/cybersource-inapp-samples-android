@@ -7,6 +7,7 @@
 
     <string name="web_checkout">Web Checkout</string>
     <string name="encrypt">Encrypt</string>
+    <string name="android_pay">Android Pay</string>
 
     <string name="invalid_card_number">Invalid Card Number</string>
     <string name="invalid_month">Invalid Month</string>

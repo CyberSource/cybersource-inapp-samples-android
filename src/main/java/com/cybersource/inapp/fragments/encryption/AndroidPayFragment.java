@@ -3,21 +3,18 @@ package com.cybersource.inapp.fragments.encryption;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.visa.inappsdk.common.SDKCurrency;
 import com.visa.inappsdk.common.error.SDKError;
-import com.visa.inappsdk.common.exceptions.SDKInvalidCardException;
 import com.visa.inappsdk.connectors.inapp.InAppSDKApiClient;
 import com.visa.inappsdk.connectors.inapp.receivers.TransactionResultReceiver;
 import com.visa.inappsdk.connectors.inapp.transaction.client.InAppTransaction;
@@ -25,11 +22,15 @@ import com.visa.inappsdk.connectors.inapp.transaction.client.InAppTransactionTyp
 import com.visa.inappsdk.datamodel.response.SDKGatewayResponse;
 import com.visa.inappsdk.datamodel.transaction.callbacks.SDKApiConnectionCallback;
 import com.visa.inappsdk.datamodel.transaction.fields.SDKBillTo;
-import com.visa.inappsdk.datamodel.transaction.fields.SDKCardAccountNumberType;
-import com.visa.inappsdk.datamodel.transaction.fields.SDKCardData;
 import com.cybersource.inapp.R;
 import com.cybersource.inapp.services.MessageSignatureService;
 import com.cybersource.inapp.signature.MessageSignature;
+import com.visa.inappsdk.datamodel.transaction.fields.SDKLineItem;
+import com.visa.inappsdk.datamodel.transaction.fields.SDKPurchaseOrder;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Fragment for a test Android Pay Transaction
@@ -38,40 +39,25 @@ import com.cybersource.inapp.signature.MessageSignature;
  */
 public class AndroidPayFragment extends Fragment implements View.OnClickListener, SDKApiConnectionCallback {
 
-    public static final String TAG = "WebCheckoutFragment";
-    private final String ACCOUNT_NUMBER = "4111111111111111";
-    private final String EXPIRATION_MONTH = "11";
-    private final String EXPIRATION_YEAR = "2017";
+    public static final String TAG = "AndroidPayFragment";
     private final String CVV = "256";
     private final String POSTAL_CODE = "98001";
     public static String API_LOGIN_ID = "test_paymentech_001"; // replace with YOUR_API_LOGIN_ID
     private static String TRANSACT_NAMESPACE = "urn:schemas-cybersource-com:transaction-data-1.120";
+    // Public SEC key
+    public static final String PUBLIC_KEY_SEC = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEGswOubUOZchQkOJPt41PMduC4Ma5ldBTIhZUMINvuTuQOrWIl3GhLDEl/75hFoWRkp+d+KBism9+1LBBa2gBnw==";
 
     /** SOAP Payments TEST endpoint address. */
     public static String PAYMENTS_TEST_URL = "https://mobiletest.ic3.com/mpos/transactionProcessor/";
     /** SOAP Payments PROD endpoint address. */
     public static String PAYMENTS_PROD_URL = "https://mobile.ic3.com/mpos/transactionProcessor/";
 
-    private final int MIN_CARD_NUMBER_LENGTH = 13;
-    private final int MIN_YEAR_LENGTH = 2;
-    private final int MIN_CVV_LENGTH = 3;
-    private final String YEAR_PREFIX = "20";
-
     private Button checkoutButton;
-    private EditText cardNumberView;
-    private EditText monthView;
-    private EditText yearView;
-    private EditText cvvView;
 
     private ProgressDialog progressDialog;
     private RelativeLayout responseLayout;
     private TextView responseTitle;
     private TextView responseValue;
-
-    private String cardNumber;
-    private String month;
-    private String year;
-    private String cvv;
 
     InAppSDKApiClient apiClient;
 
@@ -94,6 +80,7 @@ public class AndroidPayFragment extends Fragment implements View.OnClickListener
                 .sdkConnectionCallback(this) // receive callbacks for connection results
                 .sdkApiProdEndpoint(PAYMENTS_PROD_URL) // option to configure PROD Endpoint
                 .sdkApiTestEndpoint(PAYMENTS_TEST_URL) // option to configure TEST Endpoint
+                .publicKey(PUBLIC_KEY_SEC) // option to set the sec public key - needed for Android pay transaction
                 .sdkConnectionTimeout(5000) // optional connection time out in milliseconds
                 .transactionNamespace(TRANSACT_NAMESPACE) // optional - ApiClient has a default namespace too
                 .build();
@@ -104,13 +91,7 @@ public class AndroidPayFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_web_checkout, container, false);
-
-        cardNumberView = (EditText) view.findViewById(R.id.card_number_view);
-        setUpCreditCardEditText();
-        monthView = (EditText) view.findViewById(R.id.date_month_view);
-        yearView = (EditText) view.findViewById(R.id.date_year_view);
-        cvvView = (EditText) view.findViewById(R.id.security_code_view);
+        View view = inflater.inflate(R.layout.fragment_android_pay, container, false);
 
         checkoutButton = (Button) view.findViewById(R.id.button_checkout_order);
         checkoutButton.setOnClickListener(this);
@@ -131,22 +112,19 @@ public class AndroidPayFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        if(!areFormDetailsValid())
-            return;
-
         progressDialog = ProgressDialog.show(getActivity(), "Please Wait",
-                "Encrypting Card Data...", true);
+                "Performing Android Pay Transaction...", true);
         if(responseLayout.getVisibility() == View.VISIBLE)
             responseLayout.setVisibility(View.GONE);
 
-        InAppTransaction transactionObject = prepareEncryptTransactionObject();
+        InAppTransaction transactionObject = prepareAndroidPayTransactionObject();
         try {
             // make a call to connect to API
             // parameters:
             // 1) InAppSDKApiClient.Api - Type of API to make a request
             // 2) SDKTransactionObject - The transactionObject for the current transaction
             // 3) Signature String - fresh message signature for this transaction
-            apiClient.performApi(InAppSDKApiClient.Api.API_ENCRYPTION,
+            apiClient.performApi(InAppSDKApiClient.Api.API_ANDROID_PAY,
                     transactionObject, generateSignature(transactionObject));
         } catch (NullPointerException e) {
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -155,215 +133,16 @@ public class AndroidPayFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private boolean areFormDetailsValid(){
-        cardNumber = cardNumberView.getText().toString().replace(" ", "");
-        month = monthView.getText().toString();
-        year =  YEAR_PREFIX + yearView.getText().toString();
-        cvv = cvvView.getText().toString();
-
-        if(isEmptyField()){
-            checkoutButton.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake_error));
-            Toast.makeText(getActivity(), "Empty fields", Toast.LENGTH_LONG).show();
-            return false;
-        }
-        return validateFields();
-    }
-
-    private boolean isEmptyField(){
-        return  (cardNumber != null && cardNumber.isEmpty()) || (month != null && month.isEmpty())
-                || (year != null && year.isEmpty()) || (cvv != null && cvv.isEmpty());
-    }
-
-    private boolean validateFields() {
-        if(cardNumber.length() < MIN_CARD_NUMBER_LENGTH){
-            cardNumberView.requestFocus();
-            cardNumberView.setError(getString(R.string.invalid_card_number));
-            checkoutButton.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake_error));
-            return false;
-        }
-        int monthNum = Integer.parseInt(month);
-        if(monthNum < 1 || monthNum > 12){
-            monthView.requestFocus();
-            monthView.setError(getString(R.string.invalid_month));
-            checkoutButton.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake_error));
-            return false;
-        }
-        if(month.length() < MIN_YEAR_LENGTH){
-            monthView.requestFocus();
-            monthView.setError(getString(R.string.two_digit_month));
-            checkoutButton.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake_error));
-            return false;
-        }
-        if(year.length() < MIN_YEAR_LENGTH){
-            yearView.requestFocus();
-            yearView.setError(getString(R.string.invalid_year));
-            checkoutButton.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake_error));
-            return false;
-        }
-        if(cvv.length() < MIN_CVV_LENGTH){
-            cvvView.requestFocus();
-            cvvView.setError(getString(R.string.invalid_cvv));
-            checkoutButton.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake_error));
-            return false;
-        }
-        return true;
-    }
-
-    private void setUpCreditCardEditText() {
-        cardNumberView.addTextChangedListener(new TextWatcher() {
-            private boolean spaceDeleted;
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // check if a space was deleted
-                CharSequence charDeleted = s.subSequence(start, start + count);
-                spaceDeleted = " ".equals(charDeleted.toString());
-            }
-
-            public void afterTextChanged(Editable editable) {
-                // disable text watcher
-                cardNumberView.removeTextChangedListener(this);
-
-                // record cursor position as setting the text in the textview
-                // places the cursor at the end
-                int cursorPosition = cardNumberView.getSelectionStart();
-                String withSpaces = formatText(editable);
-                cardNumberView.setText(withSpaces);
-                // set the cursor at the last position + the spaces added since the
-                // space are always added before the cursor
-                cardNumberView.setSelection(cursorPosition + (withSpaces.length() - editable.length()));
-
-                // if a space was deleted also deleted just move the cursor
-                // before the space
-                if (spaceDeleted) {
-                    cardNumberView.setSelection(cardNumberView.getSelectionStart() - 1);
-                    spaceDeleted = false;
-                }
-
-                // enable text watcher
-                cardNumberView.addTextChangedListener(this);
-            }
-
-            private String formatText(CharSequence text) {
-                StringBuilder formatted = new StringBuilder();
-                int count = 0;
-                for (int i = 0; i < text.length(); ++i) {
-                    if (Character.isDigit(text.charAt(i))) {
-                        if (count % 4 == 0 && count > 0)
-                            formatted.append(" ");
-                        formatted.append(text.charAt(i));
-                        ++count;
-                    }
-                }
-                return formatted.toString();
-            }
-        });
-    }
-
-/*    private void setUpZipCodeEditText() {
-        zipCodeView.addTextChangedListener(new TextWatcher() {
-            private boolean dashDeleted;
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // check if a '-' was deleted
-                CharSequence charDeleted = s.subSequence(start, start + count);
-                dashDeleted = "-".equals(charDeleted.toString());
-            }
-
-            public void afterTextChanged(Editable editable) {
-                // disable text watcher
-                zipCodeView.removeTextChangedListener(this);
-
-                // record cursor position as setting the text in the textview
-                // places the cursor at the end
-                int cursorPosition = zipCodeView.getSelectionStart();
-                String withSpaces = formatText(editable);
-                zipCodeView.setText(withSpaces);
-                // set the cursor at the last position + the spaces added since the
-                // space are always added before the cursor
-                zipCodeView.setSelection(cursorPosition + (withSpaces.length() - editable.length()));
-
-                // if a '-' was deleted also deleted just move the cursor
-                // before the space
-                if (dashDeleted) {
-                    zipCodeView.setSelection(zipCodeView.getSelectionStart() - 1);
-                    dashDeleted = false;
-                }
-
-                // enable text watcher
-                zipCodeView.addTextChangedListener(this);
-            }
-
-            private String formatText(CharSequence text) {
-                StringBuilder formatted = new StringBuilder();
-                int count = 0;
-                for (int i = 0; i < text.length(); ++i) {
-                    if (Character.isDigit(text.charAt(i))) {
-                        if (count % 5 == 0 && count > 0)
-                            formatted.append("-");
-                        formatted.append(text.charAt(i));
-                        ++count;
-                    }
-                }
-                return formatted.toString();
-            }
-        });
-    }*/
-
-    private SDKCardData prepareTestCardData() {
-        SDKCardData cardData = null;
-        try {
-            cardData = new SDKCardData.Builder(ACCOUNT_NUMBER, EXPIRATION_MONTH,
-                    EXPIRATION_YEAR)
-                    .cvNumber(CVV) // optional
-                    .type(SDKCardAccountNumberType.PAN) //optional - if token then not optional and must be set to SDKCardType.TOKEN
-                    .build();
-        } catch (SDKInvalidCardException e) {
-            // Handle exception if the card is invalid
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
-        return cardData;
-    }
-
-    private SDKCardData prepareCardDataFromFields() {
-        SDKCardData cardData = null;
-        try {
-            cardData = new SDKCardData.Builder(cardNumber, month, year)
-                    .cvNumber(cvv) // optional
-                    .type(SDKCardAccountNumberType.PAN) //optional - if token, this must be set to SDKCardType.TOKEN
-                    .build();
-        } catch (SDKInvalidCardException e) {
-            // Handle exception if the card is invalid
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
-        return cardData;
-    }
-
     private SDKBillTo prepareBillingInformation(){
         SDKBillTo billTo = new SDKBillTo.Builder("First Name", "Last Name")
+                .street1("8397 158th AVE NE")
+                .city("Redmond")
+                .state("WA")
                 .postalCode("98052")
+                .country("United States")
+                .email("fzubair@visa.com")
                 .build();
         return billTo;
-    }
-
-    /**
-     * prepares a transaction object to be used with the Gateway Encryption transaction
-     */
-    private InAppTransaction prepareEncryptTransactionObject() {
-        // create a transaction object by calling the predefined api for creation
-        return InAppTransaction.
-                createTransactionObject(InAppTransactionType.IN_APP_TRANSACTION_ENCRYPTION) // type of transaction object
-                .merchantReferenceCode("Android_InApp_Sample_Code" + "_" + Long.toString(System.currentTimeMillis())) // can be set to anything meaningful
-                .cardData(prepareCardDataFromFields()) // card data to be encrypted
-                .billTo(prepareBillingInformation()) // billing information
-                .build();
     }
 
     /**
@@ -374,9 +153,31 @@ public class AndroidPayFragment extends Fragment implements View.OnClickListener
         return InAppTransaction.
                 createTransactionObject(InAppTransactionType.IN_APP_TRANSACTION_ANDROID_PAY) // type of transaction object
                 .merchantReferenceCode("Android_InApp_Sample_Code" + "_" + Long.toString(System.currentTimeMillis())) // can be set to anything meaningful
-                .cardData(prepareCardDataFromFields()) // card data to be encrypted
                 .billTo(prepareBillingInformation()) // billing information
+                .encryptedPaymentData("eyJlcGhlbWVyYWxQdWJsaWNLZXkiOiJCQmROQUdJdmVpUmlDdWJ6ZHhNZHhqNVhSN0FZRjdyWkhGT1gyYmd3enB0XC9pUE41ZHlXbGJWcFVick5OZG93aE1FQnVXWEVUVzBvMHFHOWlQM3BmVVlzPSIsImVuY3J5cHRlZE1lc3NhZ2UiOiJ5SXNSOVRiRkxmckoxTHh1a0Y1eDNqWmFPYkJydE96T3ZmRXMzWExkdmdGa0ZrVVFLWVFIRFI3MHdQVEdKTlwvTHJNU1ZLdEhkYVdoMitlT3d5ZHhTS2Y0XC9OMWJmeERUWEM4a1pGYkx6TklyUUpSUU02MGtxZHNTREh6SGFJXC9tRTBTVUladTIyYmcrUUxNeEk4ZTRWSmhScWVobndhdzh6cDl3UGQ3eHJcL0ZtMHJreGR6XC9PSnJ6N0p2RUdTTU1wdHhmNTVMUVEzblJCdzJIb0dEb2QrIiwidGFnIjoiczd1bW83ZWh3SlwvbEFtdlhPbjlLNnYrbDBVY0NMOTdmZkM5OVFLc1dlRE09In0=")
+                .purchaseOrder(preparePurchaseOrder())
                 .build();
+    }
+
+    private SDKPurchaseOrder preparePurchaseOrder(){
+        SDKPurchaseOrder purchaseOrder = new SDKPurchaseOrder.Builder()
+                .currency(SDKCurrency.USD)
+                .items(prepareLineItems())
+                .build();
+        return purchaseOrder;
+    }
+
+    private List<SDKLineItem> prepareLineItems(){
+        List<SDKLineItem> lineItems = new ArrayList<>();
+        lineItems.add(new SDKLineItem.Builder
+                ("Item one", new BigDecimal("0.04"), 2)
+                .taxAmount(new BigDecimal("0.01"))
+                .build());
+        lineItems.add(new SDKLineItem.Builder
+                ("Item one", new BigDecimal("0.55"), 1)
+                .taxAmount(new BigDecimal("0.05"))
+                .build());
+        return lineItems;
     }
 
     /**

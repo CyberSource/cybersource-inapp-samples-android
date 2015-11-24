@@ -7,13 +7,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.cybersource.inapp.fragments.encryption.AndroidPayFragment;
 import com.cybersource.inapp.fragments.encryption.EncryptionFragment;
 import com.cybersource.inapp.receivers.MessageSignatureResultReceiver;
 
 
 public class MainActivity extends AppCompatActivity implements MessageSignatureResultReceiver.Receiver {
 
-    private static final String TAG_FRAGMENT_WEBCHECKOUT = "TAG_FRAGMENT_WEBCHECKOUT";
+    private static final String TAG_FRAGMENT_ENCRYPTION = "TAG_FRAGMENT_ENCRYPTION";
+    private static final String TAG_FRAGMENT_ANDROID_PAY = "TAG_FRAGMENT_ANDROID_PAY";
     public static final String TAG_FRAGMENT_MESSGAGE_SIGNATURE_HEADLESS = "TAG_FRAGMENT_MESSGAGE_SIGNATURE_HEADLESS";
 
     private MessageSignatureResultReceiver resultReceiver;
@@ -22,7 +24,8 @@ public class MainActivity extends AppCompatActivity implements MessageSignatureR
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        pullWebCheckoutFragment();
+        //pullEncryptionFragment();
+        pullAndroidPayFragment();
     }
 
     @Override
@@ -54,14 +57,26 @@ public class MainActivity extends AppCompatActivity implements MessageSignatureR
         return super.onOptionsItemSelected(item);
     }
 
-    private void pullWebCheckoutFragment(){
+    private void pullEncryptionFragment(){
         FragmentManager fragmentManager = getSupportFragmentManager();
         EncryptionFragment webCheckoutFragment = (EncryptionFragment)
-                fragmentManager.findFragmentByTag(TAG_FRAGMENT_WEBCHECKOUT);
+                fragmentManager.findFragmentByTag(TAG_FRAGMENT_ENCRYPTION);
         if(webCheckoutFragment == null) {
             webCheckoutFragment = new EncryptionFragment();
             fragmentManager.beginTransaction()
-                    .replace(R.id.web_checkout_fragment_container, webCheckoutFragment, TAG_FRAGMENT_WEBCHECKOUT)
+                    .replace(R.id.fragment_container, webCheckoutFragment, TAG_FRAGMENT_ENCRYPTION)
+                    .commit();
+        }
+    }
+
+    private void pullAndroidPayFragment(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        AndroidPayFragment androidPayFragment = (AndroidPayFragment)
+                fragmentManager.findFragmentByTag(TAG_FRAGMENT_ANDROID_PAY);
+        if(androidPayFragment == null) {
+            androidPayFragment = new AndroidPayFragment();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, androidPayFragment, TAG_FRAGMENT_ANDROID_PAY)
                     .commit();
         }
     }
