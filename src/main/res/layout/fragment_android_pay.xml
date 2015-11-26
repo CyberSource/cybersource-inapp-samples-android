@@ -3,83 +3,95 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="7"
-        android:id="@+id/keyed_card_details_relative_layout"
-        android:background="@color/white"
-        android:layout_marginBottom="16dp"
-        android:gravity="center_horizontal">
+        android:layout_height="wrap_content">
 
-            <!--<include android:id="@+id/keyed_card_details"
-                layout="@layout/fragment_keyed_card_details"
-             />-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="7"
+                android:id="@+id/keyed_card_details_relative_layout"
+                android:background="@color/white"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_horizontal">
+
+                    <!--<include android:id="@+id/keyed_card_details"
+                        layout="@layout/fragment_keyed_card_details"
+                     />-->
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="16dp"
+                        android:id="@+id/card_details_relative_layout">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_below="@+id/security_layout"
+                            android:layout_marginTop="20dp"
+                            android:gravity="center_vertical">
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/button_checkout_order"
+                                android:background="@color/visa_action_golden"
+                                android:text="@string/android_pay"
+                                android:textColor="@color/white"
+                                android:textSize="22sp"
+                                android:layout_weight="1"/>
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="16dp"
-                android:id="@+id/card_details_relative_layout">
+                android:id="@+id/response_layout"
+                android:background="@color/white"
+                android:padding="10dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_below="@+id/security_layout"
-                    android:layout_marginTop="20dp"
-                    android:gravity="center_vertical">
+                    android:id="@+id/encrypted_data_title"
+                    android:text="Encrypted Data:"
+                    android:textStyle="bold"/>
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/button_checkout_order"
-                        android:background="@color/visa_action_golden"
-                        android:text="@string/android_pay"
-                        android:textColor="@color/white"
-                        android:textSize="22sp"
-                        android:layout_weight="1"/>
-                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:id="@+id/divider"
+                    android:layout_below="@+id/encrypted_data_title"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/very_lighter_gray"/>
 
-            </RelativeLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:id="@+id/encrypted_data_view"
+                    android:layout_below="@+id/divider"
+                    android:text="jhsagdja shgd jahsgd jhasgjd hasgjd hagsjdhgajsd kjdhfjkhkdjhfksjdhfkjsdhfkjsdhfkjsd"/>
 
-    </RelativeLayout>
+                </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/response_layout"
-        android:background="@color/white"
-        android:padding="10dp"
-        android:layout_marginBottom="16dp"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/encrypted_data_title"
-            android:text="Encrypted Data:"
-            android:textStyle="bold"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:id="@+id/divider"
-            android:layout_below="@+id/encrypted_data_title"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/very_lighter_gray"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:id="@+id/encrypted_data_view"
-            android:layout_below="@+id/divider"
-            android:text="jhsagdja shgd jahsgd jhasgjd hasgjd hagsjdhgajsd kjdhfjkhkdjhfksjdhfkjsdhfkjsdhfkjsd"/>
-
-        </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

@@ -384,7 +384,7 @@ public class EncryptionFragment extends Fragment implements View.OnClickListener
      * Generates the signature in the sdk to be used with the next call
      */
     private String generateSignature(InAppTransaction transactionObject) {
-        return MessageSignature.getInstance().generateSignature
+        return MessageSignature.getInstance().generateSignatureForEncryption
                 (transactionObject, API_LOGIN_ID);
     }
 

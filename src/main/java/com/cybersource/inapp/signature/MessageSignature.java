@@ -44,7 +44,7 @@ public class MessageSignature {
      * @return
      *
      */
-    public String generateSignature(InAppTransaction transactionObject, String loginId){
+    public String generateSignatureForEncryption(InAppTransaction transactionObject, String loginId){
         String stringHmacSha1 = null;
         try {
             // Take HMAC-SHA1 of the transaction-key
@@ -66,6 +66,53 @@ public class MessageSignature {
                 + loginId                                   // 3) Step 3 - Get your API_LOGIN_ID
                 + transactionObject.getMerchantReferenceCode()    // 4) Get the merchantReferenceCode
                 /*+ amount*/ + timeStamp;
+        String hashedSignatureComponents = null;
+        try {
+            // Take HMAC-SHA256 of the signatureComponents
+            hashedSignatureComponents = getHmacSHA256(signatureComponents);
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        // Finally create the final signature:
+        String finalSignature = hashedSignatureComponents + SEPARATOR + timeStamp;
+        return finalSignature;
+    }
+
+    /**
+     * Covers all the steps to create a Message-Signature
+     *
+     * @param transactionObject
+     * @param loginId
+     * @return
+     *
+     */
+    public String generateSignature(InAppTransaction transactionObject, String loginId){
+        String stringHmacSha1 = null;
+        try {
+            // Take HMAC-SHA1 of the transaction-key
+            stringHmacSha1 = getHmacSha1(transactionSecretKey);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        // Get the amount of the transaction (amount only needed for ICS_AUTH service but not for ICS_ENCRYPT_SERVICE)
+        String amount = getGatewayAmountString(transactionObject.getPurchaseOrder().getGrandTotalAmount());
+
+        // Get the current timeStamp in UTC format.
+        String timeStamp = getCurrentTimestampUTC();
+
+        // Concatenate all together into a single string:
+        String signatureComponents = stringHmacSha1
+                + loginId                                   // 3) Step 3 - Get your API_LOGIN_ID
+                + transactionObject.getMerchantReferenceCode()    // 4) Get the merchantReferenceCode
+                + amount + timeStamp;
         String hashedSignatureComponents = null;
         try {
             // Take HMAC-SHA256 of the signatureComponents

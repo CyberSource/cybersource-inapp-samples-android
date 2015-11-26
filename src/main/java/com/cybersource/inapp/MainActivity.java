@@ -1,12 +1,17 @@
 package com.cybersource.inapp;
 
 import android.os.Handler;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.cybersource.inapp.adapters.ViewPagerAdapter;
 import com.cybersource.inapp.fragments.encryption.AndroidPayFragment;
 import com.cybersource.inapp.fragments.encryption.EncryptionFragment;
 import com.cybersource.inapp.receivers.MessageSignatureResultReceiver;
@@ -24,8 +29,37 @@ public class MainActivity extends AppCompatActivity implements MessageSignatureR
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //pullEncryptionFragment();
-        pullAndroidPayFragment();
+        setupViews();
+    }
+
+    private void setupViews() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(pullEncryptionFragment(), "ENCRYPTION");
+        adapter.addFrag(pullAndroidPayFragment(), "ANDROID PAY");
+        viewPager.setAdapter(adapter);
     }
 
     @Override
@@ -57,28 +91,31 @@ public class MainActivity extends AppCompatActivity implements MessageSignatureR
         return super.onOptionsItemSelected(item);
     }
 
-    private void pullEncryptionFragment(){
+    private Fragment pullEncryptionFragment(){
         FragmentManager fragmentManager = getSupportFragmentManager();
         EncryptionFragment webCheckoutFragment = (EncryptionFragment)
                 fragmentManager.findFragmentByTag(TAG_FRAGMENT_ENCRYPTION);
         if(webCheckoutFragment == null) {
             webCheckoutFragment = new EncryptionFragment();
-            fragmentManager.beginTransaction()
+/*            fragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, webCheckoutFragment, TAG_FRAGMENT_ENCRYPTION)
-                    .commit();
+                    .commit();*/
         }
+        return webCheckoutFragment;
     }
 
-    private void pullAndroidPayFragment(){
+    private Fragment pullAndroidPayFragment(){
         FragmentManager fragmentManager = getSupportFragmentManager();
         AndroidPayFragment androidPayFragment = (AndroidPayFragment)
                 fragmentManager.findFragmentByTag(TAG_FRAGMENT_ANDROID_PAY);
         if(androidPayFragment == null) {
             androidPayFragment = new AndroidPayFragment();
-            fragmentManager.beginTransaction()
+/*            fragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, androidPayFragment, TAG_FRAGMENT_ANDROID_PAY)
-                    .commit();
+                    .commit();*/
         }
+
+        return androidPayFragment;
     }
 
     private void registerResultReceiver() {

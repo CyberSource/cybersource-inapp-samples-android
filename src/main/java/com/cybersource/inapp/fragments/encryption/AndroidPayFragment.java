@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -150,11 +149,16 @@ public class AndroidPayFragment extends Fragment implements View.OnClickListener
      */
     private InAppTransaction prepareAndroidPayTransactionObject() {
         // create a transaction object by calling the predefined api for creation
-        return InAppTransaction.
-                createTransactionObject(InAppTransactionType.IN_APP_TRANSACTION_ANDROID_PAY) // type of transaction object
-                .merchantReferenceCode("Android_InApp_Sample_Code" + "_" + Long.toString(System.currentTimeMillis())) // can be set to anything meaningful
-                .billTo(prepareBillingInformation()) // billing information
+        return InAppTransaction
+                // type of transaction object
+                .createTransactionObject(InAppTransactionType.IN_APP_TRANSACTION_ANDROID_PAY)
+                // can be set to anything meaningful
+                .merchantReferenceCode("Android_InApp_Sample_Code" + "_" + Long.toString(System.currentTimeMillis()))
+                // billing information
+                .billTo(prepareBillingInformation())
+                // paymentMethodToken String returned buy the FullWallet.getPaymentMethodToken()
                 .encryptedPaymentData("eyJlcGhlbWVyYWxQdWJsaWNLZXkiOiJCQmROQUdJdmVpUmlDdWJ6ZHhNZHhqNVhSN0FZRjdyWkhGT1gyYmd3enB0XC9pUE41ZHlXbGJWcFVick5OZG93aE1FQnVXWEVUVzBvMHFHOWlQM3BmVVlzPSIsImVuY3J5cHRlZE1lc3NhZ2UiOiJ5SXNSOVRiRkxmckoxTHh1a0Y1eDNqWmFPYkJydE96T3ZmRXMzWExkdmdGa0ZrVVFLWVFIRFI3MHdQVEdKTlwvTHJNU1ZLdEhkYVdoMitlT3d5ZHhTS2Y0XC9OMWJmeERUWEM4a1pGYkx6TklyUUpSUU02MGtxZHNTREh6SGFJXC9tRTBTVUladTIyYmcrUUxNeEk4ZTRWSmhScWVobndhdzh6cDl3UGQ3eHJcL0ZtMHJreGR6XC9PSnJ6N0p2RUdTTU1wdHhmNTVMUVEzblJCdzJIb0dEb2QrIiwidGFnIjoiczd1bW83ZWh3SlwvbEFtdlhPbjlLNnYrbDBVY0NMOTdmZkM5OVFLc1dlRE09In0=")
+                // the purchase order items and amount information
                 .purchaseOrder(preparePurchaseOrder())
                 .build();
     }
