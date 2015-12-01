@@ -1,4 +1,4 @@
-package com.visa.webcheckout.receivers;
+package com.cybersource.webcheckout.receivers;
 
 import android.os.Bundle;
 import android.os.Handler;

@@ -1,4 +1,4 @@
-package com.visa.webcheckout.fragments;
+package com.cybersource.webcheckout.fragments;
 
 
 import android.app.ProgressDialog;
@@ -17,20 +17,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.visa.inappsdk.common.error.SDKError;
-import com.visa.inappsdk.common.exceptions.SDKInvalidCardException;
-import com.visa.inappsdk.connectors.inapp.InAppSDKApiClient;
-import com.visa.inappsdk.connectors.inapp.receivers.TransactionResultReceiver;
-import com.visa.inappsdk.datamodel.response.SDKGatewayResponse;
-import com.visa.inappsdk.datamodel.transaction.SDKTransactionObject;
-import com.visa.inappsdk.datamodel.transaction.SDKTransactionType;
-import com.visa.inappsdk.datamodel.transaction.callbacks.SDKApiConnectionCallback;
-import com.visa.inappsdk.datamodel.transaction.fields.SDKBillTo;
-import com.visa.inappsdk.datamodel.transaction.fields.SDKCardAccountNumberType;
-import com.visa.inappsdk.datamodel.transaction.fields.SDKCardData;
-import com.visa.webcheckout.R;
-import com.visa.webcheckout.services.MessageSignatureService;
-import com.visa.webcheckout.signature.MessageSignature;
+import com.cybersource.inappsdk.common.error.SDKError;
+import com.cybersource.inappsdk.common.exceptions.SDKInvalidCardException;
+import com.cybersource.inappsdk.connectors.inapp.InAppSDKApiClient;
+import com.cybersource.inappsdk.connectors.inapp.receivers.TransactionResultReceiver;
+import com.cybersource.inappsdk.datamodel.response.SDKGatewayResponse;
+import com.cybersource.inappsdk.datamodel.transaction.SDKTransactionObject;
+import com.cybersource.inappsdk.datamodel.transaction.SDKTransactionType;
+import com.cybersource.inappsdk.datamodel.transaction.callbacks.SDKApiConnectionCallback;
+import com.cybersource.inappsdk.datamodel.transaction.fields.SDKBillTo;
+import com.cybersource.inappsdk.datamodel.transaction.fields.SDKCardAccountNumberType;
+import com.cybersource.inappsdk.datamodel.transaction.fields.SDKCardData;
+import com.cybersource.webcheckout.R;
+import com.cybersource.webcheckout.services.MessageSignatureService;
+import com.cybersource.webcheckout.signature.MessageSignature;
 
 /**
  * A simple {@link Fragment} subclass.

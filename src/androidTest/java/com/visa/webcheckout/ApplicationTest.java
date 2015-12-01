@@ -1,4 +1,4 @@
-package com.visa.webcheckout;
+package com.cybersource.webcheckout;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

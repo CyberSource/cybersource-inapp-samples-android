@@ -1,6 +1,6 @@
-package com.visa.webcheckout.signature;
+package com.cybersource.webcheckout.signature;
 
-import com.visa.inappsdk.datamodel.transaction.SDKTransactionObject;
+import com.cybersource.inappsdk.datamodel.transaction.SDKTransactionObject;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;

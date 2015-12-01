@@ -1,4 +1,4 @@
-package com.visa.webcheckout;
+package com.cybersource.webcheckout;
 
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
@@ -7,11 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.visa.inappsdk.common.error.SDKError;
-import com.visa.inappsdk.datamodel.response.SDKGatewayResponse;
-import com.visa.webcheckout.fragments.WebCheckoutFragment;
-import com.visa.webcheckout.receivers.MessageSignatureResultReceiver;
-import com.visa.webcheckout.services.MessageSignatureService;
+import com.cybersource.webcheckout.fragments.WebCheckoutFragment;
+import com.cybersource.webcheckout.receivers.MessageSignatureResultReceiver;
 
 
 public class MainActivity extends AppCompatActivity implements MessageSignatureResultReceiver.Receiver {
