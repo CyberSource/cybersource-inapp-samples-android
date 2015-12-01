@@ -178,7 +178,7 @@ public class AndroidPayFragment extends Fragment implements View.OnClickListener
                 .taxAmount(new BigDecimal("0.01"))
                 .build());
         lineItems.add(new SDKLineItem.Builder
-                ("Item one", new BigDecimal("0.55"), 1)
+                ("Item two", new BigDecimal("0.55"), 1)
                 .taxAmount(new BigDecimal("0.05"))
                 .build());
         return lineItems;
