@@ -1,6 +1,6 @@
 package com.cybersource.inapp.signature;
 
-import com.visa.inappsdk.connectors.inapp.transaction.client.InAppTransaction;
+import com.cybersource.inappsdk.connectors.inapp.transaction.client.InAppTransaction;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;

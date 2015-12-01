@@ -7,8 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.visa.inappsdk.connectors.inapp.InAppSDKApiClient;
-import com.visa.inappsdk.connectors.inapp.receivers.TransactionResultReceiver;
+import com.cybersource.inappsdk.connectors.inapp.InAppSDKApiClient;
+import com.cybersource.inappsdk.connectors.inapp.receivers.TransactionResultReceiver;
 
 
 public class MessageSignatureHeadlessFragment extends Fragment {
