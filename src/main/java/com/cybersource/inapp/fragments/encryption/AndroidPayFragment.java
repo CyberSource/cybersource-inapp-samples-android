@@ -156,8 +156,8 @@ public class AndroidPayFragment extends Fragment implements View.OnClickListener
                 .merchantReferenceCode("Android_InApp_Sample_Code" + "_" + Long.toString(System.currentTimeMillis()))
                 // billing information
                 .billTo(prepareBillingInformation())
-                // paymentMethodToken String returned buy the FullWallet.getPaymentMethodToken()
-                .encryptedPaymentData("eyJlcGhlbWVyYWxQdWJsaWNLZXkiOiJCQmROQUdJdmVpUmlDdWJ6ZHhNZHhqNVhSN0FZRjdyWkhGT1gyYmd3enB0XC9pUE41ZHlXbGJWcFVick5OZG93aE1FQnVXWEVUVzBvMHFHOWlQM3BmVVlzPSIsImVuY3J5cHRlZE1lc3NhZ2UiOiJ5SXNSOVRiRkxmckoxTHh1a0Y1eDNqWmFPYkJydE96T3ZmRXMzWExkdmdGa0ZrVVFLWVFIRFI3MHdQVEdKTlwvTHJNU1ZLdEhkYVdoMitlT3d5ZHhTS2Y0XC9OMWJmeERUWEM4a1pGYkx6TklyUUpSUU02MGtxZHNTREh6SGFJXC9tRTBTVUladTIyYmcrUUxNeEk4ZTRWSmhScWVobndhdzh6cDl3UGQ3eHJcL0ZtMHJreGR6XC9PSnJ6N0p2RUdTTU1wdHhmNTVMUVEzblJCdzJIb0dEb2QrIiwidGFnIjoiczd1bW83ZWh3SlwvbEFtdlhPbjlLNnYrbDBVY0NMOTdmZkM5OVFLc1dlRE09In0=")
+                // token String returned buy the FullWallet.getPaymentMethodToken().getToken()
+                .encryptedPaymentData("eyJlcGhlbWVyYWxQdWJsaWNLZXkiOiJCTDBLVDA3Ym9RZkxYTVF4aENaVDdrY2k5UlpsVVExUnJBRHBPN3I1aEVJODdjK1FKandneXBoSHBkM0tQTFwvdEc0UkxSakZLcEFDeVFDcjB1SzJDVExNPSIsImVuY3J5cHRlZE1lc3NhZ2UiOiJzYnI5RjZ0VitTY1diVzZZd0NiQlRSUXBLd2pRbUU4T1wvZXFHcEJ6eldMSkdpaFNhdE42ZVNKeDA5b0xKaXRGRjlnQUt2QXpXTDkzNmVCUldkMEN5N29DS3ExcDRPZjlcLzRZWWZMVkNYZWVpRXBNeW5VZklIU3lObDhIV29pOFpRMHFpMGJPaFhqOW92QWNBZ3lKWFwvMjVmOVwvNHoyVzBWYzc0OWQrelNUQjFkM096RzBxNlI0cHZ3aVduZTBUQ0dRd0lHb3VXUEJXZTBHcG4rSGVpM2YiLCJ0YWciOiJ2VU9KZTVNRzM4U1ZyajQ3a2xiZFlRNk9hMXJJMjBNQnVJSGFLRjdmaVNnPSJ9")
                 // the purchase order items and amount information
                 .purchaseOrder(preparePurchaseOrder())
                 .build();
