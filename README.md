@@ -1,2 +1,12 @@
-# cybersource-android-samples
-Sample application demonstrating the CyberSource Android SDK
+# Sample Application for the Android SDK
+
+## Usage
+
+Clone this repository
+````
+git clone https://github.com/CyberSource/cybersource-android-samples
+````
+
+Open the project in Android Studio and Run.
+
+
