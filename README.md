@@ -1,4 +1,4 @@
-# Sample Application for the CyberSource Android SDK
+# Sample Application for the Android SDK
 
 ## Usage
 
