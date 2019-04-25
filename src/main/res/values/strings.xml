@@ -7,6 +7,14 @@
 
     <string name="web_checkout">Web Checkout</string>
     <string name="encrypt">Encrypt</string>
+    <string name="manual_card_entry">Manual Card Entry</string>
+    <string name="google_pay">Google Pay</string>
+    <string name="googlepay_button_content_description">Google Pay</string>
+    <string name="buy_with_googlepay_button_content_description">Buy with Google Pay</string>
+    <string name="enter_amount">Enter Amount</string>
+    <string name="google_pay_unavailable">Unfortunately, Google Pay is not available on this phone.</string>
+    <string name="google_pay_status_checking">Checking if Google Pay is available&#8230;</string>
+    <string name="is_ready_to_pay_failed">Google pay ready to pay: failed</string>
 
     <string name="invalid_card_number">Invalid Card Number</string>
     <string name="invalid_month">Invalid Month</string>

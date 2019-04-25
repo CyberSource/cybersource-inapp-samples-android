@@ -1,9 +1,13 @@
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:3.3.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -13,19 +17,24 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
 }
 
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.0"
+    compileSdkVersion 27
 
     defaultConfig {
         applicationId "com.visa.webcheckout"
-        minSdkVersion 14
-        targetSdkVersion 23
+        /* Google Payment API is not supported in SDK versions lower than 19. This example requires
+       version 24 due to use of newer constructs like Optional. */
+        minSdkVersion 24
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
     }
@@ -38,8 +47,9 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.1.0'
-    compile 'com.android.support:design:23.1.0'
-    compile 'com.cybersource:inappsdk:+'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.cybersource:inappsdk:+'
+    implementation 'com.google.android.gms:play-services-wallet:16.0.1'
 }

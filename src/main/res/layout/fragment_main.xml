@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="15dp"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/amount_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:hint="@string/enter_amount"
+        android:imeOptions="actionDone"
+        android:inputType="number"
+        android:textSize="26sp" />
+
+    <Button
+        android:id="@+id/button_checkout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/visa_action_golden"
+        android:text="@string/manual_card_entry"
+        android:textColor="@color/white"
+        android:textSize="22sp" />
+
+    <include
+        android:id="@+id/button_google_pay"
+        layout="@layout/googlepay_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/buy_button_height"
+        android:layout_marginTop="10dp"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/google_pay_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/google_pay_status_checking"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/google_pay_token"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_marginTop="10dp"
+        android:padding="12dp"
+        android:visibility="gone"
+        android:gravity="center|start"
+        android:textIsSelectable="true"
+        android:textSize="14sp" />
+
+
+</LinearLayout>
