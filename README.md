@@ -2,14 +2,14 @@
 
 ## Usage
 
-###Clone this repository
+### Clone this repository
 ````
 git clone https://github.com/CyberSource/cybersource-android-samples
 ````
 
-###Open the project in Android Studio and Run.
+### Open the project in Android Studio and Run.
 
-###Run through the sample mobile application and at the end you will get an encrypted payment blob which you can then pass back to your payment server without any PCI concerns.  This payment blob is then passed to a standard CyberSource payment authorization API request.
+### Run through the sample mobile application and at the end you will get an encrypted payment blob which you can then pass back to your payment server without any PCI concerns.  This payment blob is then passed to a standard CyberSource payment authorization API request.
 
 ## Using the Payment Blob
 Once you have the secure payment blob from our SDK you can post that up to your mobile backend/payment server (without incurring any additional PCI burden) and make a standard CyberSource API call.  For example, to authorize that card:  
