@@ -1,3 +1,5 @@
+## :no_entry: [DEPRECATED] 
+
 # Sample Application for the Android SDK
 
 ## Usage
